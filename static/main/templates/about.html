@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}About — Quantum Bloch{% endblock %}
+{% block content %}
+<section class="py-5 position-relative">
+  <div class="container">
+    <h1 class="display-6 fw-bold mb-3">About This Project</h1>
+    <p class="lead text-secondary">A research‑oriented interface to explore quantum intuition through interactive visuals.</p>
+    <div class="row g-4 mt-1">
+      {% set groups = [
+        { 'title':'Impacts', 'items': sections.Impacts },
+        { 'title':'Benefits', 'items': sections.Benefits },
+        { 'title':'Feasibility', 'items': sections.Feasibility }
+      ] %}
+      {% for group in groups %}
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 {% if loop.index == 1 %}card-a{% elif loop.index == 2 %}card-b{% else %}card-c{% endif %}">
+          <div class="card-body">
+            <h5 class="card-title">{{ group.title }}</h5>
+            {% if group.title == 'Impacts' %}
+            <p class="text-secondary">This simulator represents a significant advancement in quantum education and research tools, offering new ways to understand and interact with quantum systems.</p>
+            {% elif group.title == 'Benefits' %}
+            <p class="text-secondary">The application provides numerous advantages for quantum computing education and research, making complex concepts more accessible and practical.</p>
+            {% elif group.title == 'Feasibility' %}
+            <p class="text-secondary">Built on proven technologies and designed for real-world use, this project demonstrates the practicality of web-based quantum simulation.</p>
+            {% endif %}
+            {% if group['items'] and group['items']|length > 0 %}
+              <ul class="list-unstyled vstack gap-2 mt-2">
+                {% for item in group['items'] %}
+                <li class="d-flex gap-2 align-items-start"><span class="brand-dot mt-2"></span><span>{{ item }}</span></li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <!-- <p class="text-secondary">No entries added yet. Update static/main/info.md to populate this section.</p> -->
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Notes — Quantum Bloch{% endblock %}
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <h1 class="display-6 fw-bold mb-3">Notes — Quantum Concepts</h1>
+    <p class="lead text-secondary">Quick reference cards to explain gates, density matrices, and reduced density matrices.</p>
+
+    <div class="row g-4 mt-4">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 card-a">
+          <div class="card-body">
+            <h5 class="card-title">Quantum Gates (Quick)</h5>
+            <p class="text-secondary">Gates modify qubits (single- and multi-qubit). Common gates include:</p>
+            <ul class="mt-2">
+              <li><strong>H</strong> (Hadamard): creates superposition: H|0> = (|0>+|1>)/√2</li>
+              <li><strong>X</strong> (Pauli-X): bit-flip (like NOT)</li>
+              <li><strong>Z</strong> (Pauli-Z): phase flip</li>
+              <li><strong>CX / CX</strong> (Controlled-X): two-qubit entangling gate</li>
+              <li><strong>RX/RY/RZ</strong>: rotations around Bloch axes by an angle</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 card-b">
+          <div class="card-body">
+            <h5 class="card-title">Density Matrix</h5>
+            <p class="text-secondary">A density matrix ρ encodes both pure and mixed quantum states. For a pure state |ψ>,
+            ρ = |ψ><ψ|. It is a positive semidefinite, Hermitian matrix with trace 1.</p>
+            <p class="mt-2"><strong>Uses:</strong> represents ensembles, compute expectation values, and evaluate purity.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 card-c">
+          <div class="card-body">
+            <h5 class="card-title">Reduced Density Matrix</h5>
+            <p class="text-secondary">When you have a composite system AB, the reduced density matrix for subsystem A is
+            ρ_A = Tr_B(ρ_AB) — you trace out (sum over) subsystem B. This describes A's statistics when B is ignored.</p>
+            <p class="mt-2"><strong>Why care?</strong> reduced states show entanglement and mixedness at the subsystem level.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <h5 class="card-title">Examples</h5>
+            <p class="text-secondary">Try these in the simulator:</p>
+            <ul>
+              <li><code>H 0</code> — puts qubit 0 into superposition.</li>
+              <li><code>H 0\nCX 0 1</code> — creates a Bell-like entangled pair between qubits 0 and 1.</li>
+              <li>After running, select a single qubit and inspect its reduced density matrix & purity.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% block title %}Quantum Bloch — Simulator{% endblock %}
+{% block content %}
+
+<section class="hero-section py-5 position-relative overflow-hidden">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-6">
+        <span class="badge rounded-pill text-bg-info-subtle mb-3 px-3 py-2">Quantum Toolkit</span>
+        <h1 class="display-5 fw-bold">Multi‑Qubit Bloch Sphere Simulator</h1>
+        <p class="lead text-secondary">Explore quantum states, visualize multi‑qubit systems, and render Bloch vectors for selected qubits.</p>
+        <div class="d-flex gap-2">
+          <a href="#simulator" class="btn btn-gradient">Launch Simulator</a>
+          <a href="{{ url_for('about') }}" class="btn btn-outline-light border-secondary">Learn More</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card bg-dark border-0 shadow hero-card">
+          <div class="ratio ratio-16x9 rounded overflow-hidden position-relative">
+            <img src="{{ url_for('static', filename='images/logo/qubit.webp') }}" alt="Quantum visualization" class="w-100 h-100" style="object-fit:cover;">
+            <div class="position-absolute top-0 start-0 end-0 bottom-0 hero-visual"></div>
+          </div>
+          <div class="card-body text-light small">Interactive visualization powered by Qiskit + Matplotlib</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</section>
+
+<div id="simulator" class="container my-4 p-4 rounded-4 content-card shadow-sm">
+    <h2 class="text-primary mb-3">Build Circuit & Visualize</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label for="circuit_input" class="form-label">Enter Quantum Circuit:</label>
+            <textarea class="form-control" name="circuit_input" id="circuit_input" rows="6"
+                      placeholder="H 0&#10;CX 0 1&#10;H 2">{{ circuit_input }}</textarea>
+            <div class="form-text">Use one gate per line. Example: H 0, CX 0 1, CCX 0 1 2</div>
+        </div>
+
+    {% if num_qubits > 0 %}
+    <!-- qubit selection hidden until Next is clicked -->
+    <div class="mb-3" id="qubit-section" style="display:none">
+            <label class="form-label">Select Qubits to Display:</label>
+            <div class="checkbox-container">
+                {% for i in range(num_qubits) %}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="qubits" value="{{ i }}" id="q{{ i }}" {% if i in selected_qubits %}checked{% endif %}>
+                    <label class="form-check-label" for="q{{ i }}">Qubit {{ i }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="d-flex gap-2">
+          <!-- Next shows after user types circuit; Visualize shows after user selects qubits -->
+          <button type="button" id="btn-next" class="btn btn-success" style="display:none">Next</button>
+          <button type="submit" id="btn-visualize" class="btn btn-primary" style="display:none">Visualize</button>
+          <button type="button" id="btn-sample" class="btn btn-outline-secondary">Load Sample</button>
+          <button type="button" id="btn-clear" class="btn btn-danger">Clear</button>
+        </div>
+    </form>
+
+    {% if error_msg %}
+        <div class="alert alert-danger mt-3" role="alert">
+          {{ error_msg }}
+        </div>
+    {% endif %}
+
+    {% if circuit_diagram %}
+      <hr>
+      <h2 class="text-center mt-4">Circuit Diagram</h2>
+      <div class="text-center">
+        <img src="{{ circuit_diagram }}" alt="Circuit Diagram" class="img-fluid rounded border" style="max-width:720px">
+      </div>
+    {% endif %}
+
+    {% if plots %}
+      <hr>
+      <h2 class="text-center mt-4">Bloch Sphere Plots</h2>
+      <div class="row g-4 mt-1">
+        {% for plot in plots %}
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card h-100 shadow-sm hover-lift">
+              <img src="{{ plot.url }}" class="card-img-top p-2 rounded" alt="Bloch Sphere" title="X={{ plot.bloch[0]|round(3) }}, Y={{ plot.bloch[1]|round(3) }}, Z={{ plot.bloch[2]|round(3) }}">
+              <div class="card-body">
+                <h5 class="card-title">Qubit</h5>
+                <p class="card-text mb-1"><strong>Dirac:</strong> {{ plot.dirac }}</p>
+                <p class="card-text mb-1"><strong>Purity:</strong> {{ plot.purity }}</p>
+                <p class="card-text mb-1"><strong>P(|0>):</strong> {{ plot.p0 }}% &nbsp; <strong>P(|1>):</strong> {{ plot.p1 }}%</p>
+                <details class="mt-2">
+                  <summary>Reduced density matrix</summary>
+                  <pre class="mt-2 small">{{ plot.rho }}</pre>
+                </details>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+</div>
+
+<section class="container my-5">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="info-card p-3 rounded-4">
+        <h5>State Vectors</h5>
+        <p class="mb-0 text-secondary">Visualize Bloch vectors for selected qubits after your circuit.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="info-card p-3 rounded-4">
+        <h5>Gates & Circuits</h5>
+        <p class="mb-0 text-secondary">Supports X, Y, Z, H, CZ, CH, CCX, rotations (RX/RY/RZ), and more.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="info-card p-3 rounded-4">
+        <h5>Export</h5>
+        <p class="mb-0 text-secondary">Images are saved to static/images and embedded automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function(){
+    const sample = 'H 0\nCX 0 1\nRY 1.5708 0\nRZ 0.785 1';
+    const ta = document.getElementById('circuit_input');
+    const btnSample = document.getElementById('btn-sample');
+    const btnClear = document.getElementById('btn-clear');
+    const btnNext = document.getElementById('btn-next');
+    const btnVisualize = document.getElementById('btn-visualize');
+
+    // Show sample/load handling
+    if(btnSample && ta){ btnSample.addEventListener('click', ()=>{ ta.value = sample; ta.dispatchEvent(new Event('input')); ta.focus(); }); }
+
+    // Clear resets form (text + checkboxes) and button states
+    if(btnClear){ btnClear.addEventListener('click', ()=>{
+      const form = ta ? ta.closest('form') : null;
+      if(form){ form.reset(); }
+      if(ta){ ta.value = ''; ta.dispatchEvent(new Event('input')); }
+      // hide visualize/next
+      if(btnNext) btnNext.style.display = 'none';
+      if(btnVisualize) btnVisualize.style.display = 'none';
+    }); }
+
+    // Input: show Next when user types something
+    if(ta && btnNext){
+      let nextClicked = false;
+      const maybeShowNext = ()=>{
+        if(ta.value && ta.value.trim().length>0){ btnNext.style.display='inline-block'; }
+        else { btnNext.style.display='none'; btnVisualize.style.display='none'; nextClicked = false; }
+      };
+      ta.addEventListener('input', maybeShowNext);
+      // initial
+      maybeShowNext();
+
+      // Next click: if there are qubit checkboxes, reveal them (they're server-rendered), else just show Visualize
+      btnNext.addEventListener('click', ()=>{
+        nextClicked = true;
+        const qubitSection = document.getElementById('qubit-section');
+        const checkboxContainer = document.querySelector('.checkbox-container');
+        if(qubitSection){ qubitSection.style.display = 'block'; }
+        if(checkboxContainer){
+          // focus first checkbox to hint user
+          const firstCb = checkboxContainer.querySelector('input[type=checkbox]');
+          if(firstCb){ firstCb.focus(); }
+          // hide Next; show Visualize only when a checkbox is selected (or already selected)
+          btnNext.style.display='none';
+          const anyChecked = !!checkboxContainer.querySelector('input[type=checkbox]:checked');
+          if(anyChecked){ btnVisualize.style.display='inline-block'; }
+        } else {
+          // no qubit selection - show visualize directly
+          btnNext.style.display='none'; btnVisualize.style.display='inline-block';
+        }
+      });
+
+      // Listen for checkbox changes to show/hide visualize button
+      const watchCheckboxes = ()=>{
+        const checkboxContainer = document.querySelector('.checkbox-container');
+        if(!checkboxContainer) return;
+        checkboxContainer.addEventListener('change', ()=>{
+          const anyChecked = !!checkboxContainer.querySelector('input[type=checkbox]:checked');
+          // show Visualize only after Next clicked and a checkbox selected
+          btnVisualize.style.display = (nextClicked && anyChecked) ? 'inline-block' : 'none';
+        });
+      };
+      document.addEventListener('DOMContentLoaded', watchCheckboxes);
+      watchCheckboxes();
+    }
+  })();
+</script>
+
+ 
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Contact — Quantum Bloch{% endblock %}
+{% block content %}
+<section class="py-5 position-relative">
+  <div class="container">
+    <h1 class="display-6 fw-bold mb-3">Contact Us</h1>
+    <p class="lead text-secondary">Have questions or collaboration ideas? Reach out.</p>
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4">
+          <div class="card-body p-4">
+            <form method="post" action="mailto:you@example.com" class="vstack gap-3">
+              <input required name="name" placeholder="Your Name" class="form-control" />
+              <input required type="email" name="email" placeholder="Your Email" class="form-control" />
+              <textarea required name="message" rows="5" placeholder="Message" class="form-control"></textarea>
+              <button class="btn btn-gradient" type="submit">Send Message</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="info-card p-3 p-md-4 rounded-4">
+          <h5>Follow</h5>
+          <p class="mb-1"><a href="#">Twitter</a></p>
+          <p class="mb-1"><a href="#">GitHub</a></p>
+          <p class="mb-0 text-secondary">We usually respond within 2–3 business days.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Quantum Bloch{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+</head>
+<body class="bg-body">
+<!-- 3D Background Elements -->
+<div class="background-container">
+  <div class="shape shape1"></div>
+  <div class="shape shape2"></div>
+  <div class="shape shape3"></div>
+  <div class="shape shape4"></div>
+  <div class="shape shape5"></div>
+  <div class="shape shape6"></div>
+  <div class="shape shape7"></div>
+  <div class="shape shape8"></div>
+</div>
+<!-- Cursor Follower -->
+<div class="cursor-follower"></div>
+<header class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+      <span class="brand-dot"></span> Quantum Bloch
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsMain" aria-controls="navbarsMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsMain">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+        <li class="nav-item"><a class="nav-link {% if request.endpoint=='index' %}active{% endif %}" href="{{ url_for('index') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.endpoint=='about' %}active{% endif %}" href="{{ url_for('about') }}">About</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.endpoint=='notes' %}active{% endif %}" href="{{ url_for('notes') }}">Notes</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.endpoint=='contact' %}active{% endif %}" href="{{ url_for('contact') }}">Contact</a></li>
+        <li class="nav-item ms-lg-2"><a class="btn btn-gradient" href="{{ url_for('index') }}#simulator">Open Simulator</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="navbar-underline"></div>
+  <div class="navbar-glow"></div>
+  <div class="navbar-glow-2"></div>
+  <div class="navbar-glow-3"></div>
+</header>
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="bg-dark text-light py-4 mt-5 border-top border-secondary-subtle">
+  <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+    {# Safely render year: prefer config YEAR, fall back to current year if available #}
+    <span class="opacity-75">&copy; {{ config.get('YEAR') or now().year if (now is defined) else '' }}</span>
+    <span class="opacity-75">Quantum Bloch — Built for quantum enthusiasts</span>
+    <div class="d-flex gap-3">
+      <a href="#" class="link-light text-decoration-none">Twitter</a>
+      <a href="#" class="link-light text-decoration-none">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+
