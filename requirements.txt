@@ -18,7 +18,6 @@ psutil==7.0.0
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
 qiskit==2.1.2
-qiskit-aer==0.17.1
 rustworkx==0.17.1
 scipy==1.16.1
 six==1.17.0

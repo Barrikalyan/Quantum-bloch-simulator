@@ -14,7 +14,7 @@ import re
 import matplotlib
 matplotlib.use('Agg')  # Use a headless backend to avoid Tkinter/main-thread GUI issues
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'static', 'main', 'templates'), static_folder=os.path.join(os.path.dirname(__file__), 'static', 'main', 'static'), root_path=os.path.dirname(__file__))
 SECTIONS = {
     "Impacts": [
         "Enhance intuition about quantum superposition and entanglement",
@@ -72,7 +72,7 @@ def parse_info_md(md_path):
         sections['Impacts'] = list(sections['Benefits'])
     return sections
 
-IMAGE_FOLDER = os.path.join(os.path.dirname(__file__), 'static', 'images')
+IMAGE_FOLDER = os.path.join(os.path.dirname(__file__), 'static', 'main', 'static', 'images')
 os.makedirs(IMAGE_FOLDER, exist_ok=True)
 
 # --- Decomposition helpers ---
@@ -302,7 +302,7 @@ def index():
 
 @app.route('/about')
 def about():
-    md_path = os.path.join(os.path.dirname(__file__), 'info.md')
+    md_path = os.path.join(os.path.dirname(__file__), 'static', 'main', 'info.md')
     sections = parse_info_md(md_path)
     # Merge with any hardcoded SECTIONS overrides
     merged = {k: (SECTIONS.get(k) or []) for k in set(list(sections.keys()) + list(SECTIONS.keys()))}
